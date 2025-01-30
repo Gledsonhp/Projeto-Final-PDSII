@@ -16,11 +16,63 @@ bool Othello::jogadaValida(int linha, int coluna) {
     if (linha < 0 || linha >= 8 || coluna < 0 || coluna >= 8 || tabuleiro[linha][coluna] != ' ') {
         return false;
     }
-    return true;
+    char jogador = turnoJogador1 ? 'X' : 'O';
+    for (int dL = -1; dL <= 1; ++dL) {
+        for (int dC = -1; dC <= 1; ++dC) {
+            if (dL == 0 && dC == 0) continue;
+            if (verificarCaptura(linha, coluna, dL, dC, jogador)) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
-void Othello::capturarPecas(int linha, int coluna) {
-    tabuleiro[linha][coluna] = turnoJogador1 ? 'X' : 'O';
+bool Othello::verificarCaptura(int linha, int coluna, int dL, int dC, char jogador) {
+    int i = linha + dL, j = coluna + dC;
+    bool encontrouAdversario = false;
+    char adversario = (jogador == 'X') ? 'O' : 'X';
+
+    while (i >= 0 && i < 8 && j >= 0 && j < 8 && tabuleiro[i][j] == adversario) {
+        encontrouAdversario = true;
+        i += dL;
+        j += dC;
+    }
+
+    return encontrouAdversario && i >= 0 && i < 8 && j >= 0 && j < 8 && tabuleiro[i][j] == jogador;
+}
+
+void Othello::capturarPecas(int linha, int coluna, char jogador) {
+    for (int dL = -1; dL <= 1; ++dL) {
+        for (int dC = -1; dC <= 1; ++dC) {
+            if (dL == 0 && dC == 0) continue;
+            if (verificarCaptura(linha, coluna, dL, dC, jogador)) {
+                transformarPecas(linha, coluna, jogador);
+            }
+        }
+    }
+}
+
+void Othello::transformarPecas(int linha, int coluna, char jogador) {
+    for (int dL = -1; dL <= 1; ++dL) {
+        for (int dC = -1; dC <= 1; ++dC) {
+            if (dL == 0 && dC == 0) continue;
+            int i = linha + dL, j = coluna + dC;
+            while (i >= 0 && i < 8 && j >= 0 && j < 8 && tabuleiro[i][j] != jogador && tabuleiro[i][j] != ' ') {
+                i += dL;
+                j += dC;
+            }
+            if (i >= 0 && i < 8 && j >= 0 && j < 8 && tabuleiro[i][j] == jogador) {
+                i -= dL;
+                j -= dC;
+                while (i != linha || j != coluna) {
+                    tabuleiro[i][j] = jogador;
+                    i -= dL;
+                    j -= dC;
+                }
+            }
+        }
+    }
 }
 
 bool Othello::verificarFimDeJogo() {
@@ -50,6 +102,30 @@ void Othello::exibirTabuleiro() {
     }
 }
 
+int Othello::contarPecas(char jogador) {
+    int count = 0;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (tabuleiro[i][j] == jogador) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+void Othello::exibirVencedor() {
+    int pecasX = contarPecas('X');
+    int pecasO = contarPecas('O');
+    if (pecasX > pecasO) {
+        std::cout << "O vencedor é " << jogador1->getApelido() << " com " << pecasX << " peças!" << std::endl;
+    } else if (pecasO > pecasX) {
+        std::cout << "O vencedor é " << jogador2->getApelido() << " com " << pecasO << " peças!" << std::endl;
+    } else {
+        std::cout << "Empate! Ambos os jogadores têm o mesmo número de peças." << std::endl;
+    }
+}
+
 void Othello::jogar() {
     std::cout << "Iniciando o jogo Othello...\n";
     while (!verificarFimDeJogo()) {
@@ -61,7 +137,8 @@ void Othello::jogar() {
         std::cin >> linha >> coluna;
 
         if (jogadaValida(linha, coluna)) {
-            capturarPecas(linha, coluna);
+            capturarPecas(linha, coluna, turnoJogador1 ? 'X' : 'O');
+            tabuleiro[linha][coluna] = turnoJogador1 ? 'X' : 'O';
             turnoJogador1 = !turnoJogador1;
         } else {
             std::cout << "Jogada inválida. Tente novamente.\n";
@@ -70,20 +147,5 @@ void Othello::jogar() {
 
     std::cout << "O jogo terminou!" << std::endl;
     exibirTabuleiro();
-
-    int contadorX = 0, contadorO = 0;
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            if (tabuleiro[i][j] == 'X') contadorX++;
-            if (tabuleiro[i][j] == 'O') contadorO++;
-        }
-    }
-
-    if (contadorX > contadorO) {
-        std::cout << "O vencedor é " << jogador1->getApelido() << " (X)!" << std::endl;
-    } else if (contadorO > contadorX) {
-        std::cout << "O vencedor é " << jogador2->getApelido() << " (O)!" << std::endl;
-    } else {
-        std::cout << "Empate! Ambos os jogadores têm o mesmo número de peças." << std::endl;
-    }
+    exibirVencedor();
 }
