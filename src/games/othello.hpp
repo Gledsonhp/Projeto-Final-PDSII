@@ -14,10 +14,14 @@ public:
 private:
     void inicializarTabuleiro();
     bool jogadaValida(int linha, int coluna);
-    void capturarPecas(int linha, int coluna);
+    bool verificarCaptura(int linha, int coluna, int dL, int dC, char jogador);
+    void capturarPecas(int linha, int coluna, char jogador);
     bool verificarFimDeJogo();
     void exibirJogadorAtual();
     void exibirTabuleiro();
+    void transformarPecas(int linha, int coluna, char jogador);
+    int contarPecas(char jogador);
+    void exibirVencedor();
 
     std::shared_ptr<Jogador> jogador1;
     std::shared_ptr<Jogador> jogador2;
@@ -25,4 +29,4 @@ private:
     std::vector<std::vector<char>> tabuleiro;
 };
 
-#endif
+#endif // OTHELLO_HPP
