@@ -47,31 +47,20 @@ void Othello::capturarPecas(int linha, int coluna, char jogador) {
         for (int dC = -1; dC <= 1; ++dC) {
             if (dL == 0 && dC == 0) continue;
             if (verificarCaptura(linha, coluna, dL, dC, jogador)) {
-                transformarPecas(linha, coluna, jogador);
+                transformarPecas(linha, coluna, dL, dC, jogador);
             }
         }
     }
 }
 
-void Othello::transformarPecas(int linha, int coluna, char jogador) {
-    for (int dL = -1; dL <= 1; ++dL) {
-        for (int dC = -1; dC <= 1; ++dC) {
-            if (dL == 0 && dC == 0) continue;
-            int i = linha + dL, j = coluna + dC;
-            while (i >= 0 && i < 8 && j >= 0 && j < 8 && tabuleiro[i][j] != jogador && tabuleiro[i][j] != ' ') {
-                i += dL;
-                j += dC;
-            }
-            if (i >= 0 && i < 8 && j >= 0 && j < 8 && tabuleiro[i][j] == jogador) {
-                i -= dL;
-                j -= dC;
-                while (i != linha || j != coluna) {
-                    tabuleiro[i][j] = jogador;
-                    i -= dL;
-                    j -= dC;
-                }
-            }
-        }
+void Othello::transformarPecas(int linha, int coluna, int dL, int dC, char jogador) {
+    int i = linha + dL, j = coluna + dC;
+
+    // Continuar na direção até encontrar a peça do jogador
+    while (tabuleiro[i][j] != jogador) {
+        tabuleiro[i][j] = jogador;
+        i += dL;
+        j += dC;
     }
 }
 
