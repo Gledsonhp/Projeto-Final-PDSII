@@ -1,20 +1,17 @@
 #ifndef OTHELLO_HPP
 #define OTHELLO_HPP
 
-#include <memory>
 #include <vector>
-#include <iostream>
+#include <memory>
 #include "Jogador.hpp"
 
 class Othello {
-public:
-    Othello(std::shared_ptr<Jogador> j1, std::shared_ptr<Jogador> j2);
-    void jogar();
-    void exibirTabuleiro();
-    void exibirJogadorAtual();
-    void exibirVencedor();
-
 private:
+    std::vector<std::vector<char>> tabuleiro;
+    std::shared_ptr<Jogador> jogador1;
+    std::shared_ptr<Jogador> jogador2;
+    bool turnoJogador1;
+
     void inicializarTabuleiro();
     bool jogadaValida(int linha, int coluna);
     bool verificarCaptura(int linha, int coluna, int dL, int dC, char jogador);
@@ -23,12 +20,12 @@ private:
     bool verificarFimDeJogo();
     int contarPecas(char jogador);
 
-    std::vector<std::vector<char>> tabuleiro;
-    std::shared_ptr<Jogador> jogador1, jogador2;
-    bool turnoJogador1;
-
-    std::vector<std::pair<int, int>> pecasCapturadasJogador1;
-    std::vector<std::pair<int, int>> pecasCapturadasJogador2;
+public:
+    Othello(std::shared_ptr<Jogador> j1, std::shared_ptr<Jogador> j2);
+    void exibirJogadorAtual();
+    void exibirTabuleiro();
+    void exibirVencedor();
+    void jogar();
 };
 
 #endif // OTHELLO_HPP
