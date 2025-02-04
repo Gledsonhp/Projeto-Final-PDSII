@@ -12,7 +12,6 @@ Tabuleiro::Tabuleiro(int linhas, int colunas) : linhas(linhas), colunas(colunas)
 }
 
 void Tabuleiro::exibirTabuleiro() const {
-@@ -18,19 +19,19 @@ void Tabuleiro::exibirTabuleiro() const {
         }
         std::cout << std::endl;
         if (i < linhas - 1) {
