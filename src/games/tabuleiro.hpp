@@ -11,8 +11,9 @@ protected:
     std::vector<std::vector<char>> tabuleiro;
 
 public:
-    Tabuleiro(int tamanho);
-    Tabuleiro(int linhas, int colunas);
+    Tabuleiro();
+    Tabuleiro(int tamanho); 
+    Tabuleiro(int linhas, int colunas); 
 
     virtual void exibirTabuleiro() const;
     bool estaVazio(int linha, int coluna) const;
