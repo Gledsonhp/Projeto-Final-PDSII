@@ -12,6 +12,9 @@ Tabuleiro::Tabuleiro(int linhas, int colunas) : linhas(linhas), colunas(colunas)
 }
 
 void Tabuleiro::exibirTabuleiro() const {
+    for (int i = 0; i < linhas; i++) {
+        for (int j = 0; j < colunas; j++) {
+            std::cout << (j == 0 ? "" : "|") << tabuleiro[i][j];
         }
         std::cout << std::endl;
         if (i < linhas - 1) {
